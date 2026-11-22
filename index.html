@@ -2357,7 +2357,7 @@ const API2 = () => API + 'absensi-' + type;
                         const d = await req2(`${API2()}&action=students`);
                         students = d.data || [];
                         // $('aClass').textContent = students[0]?.nama_kelas || '-';
-                        $('aClass').textContent = `${kelase}` || '-';
+                        $('aClass').textContent = kelase || '-';
                         $('aToday').textContent = d.tanggal || '-';
                         drawRows();
                     } catch (e) {
