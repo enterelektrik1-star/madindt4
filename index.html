@@ -2611,6 +2611,20 @@ const API2 = () => API + 'absensi-' + type;
             //   });
         </script>
 
+<script>
+window.toggleMobileMenu = function () {
+    const menu = document.getElementById('mobileMenu');
+
+    if (!menu) {
+        console.error('Elemen #mobileMenu tidak ditemukan');
+        return;
+    }
+
+    menu.classList.toggle('hidden');
+};
+</script>
+</body>
+
 </body>
 
 </html>
