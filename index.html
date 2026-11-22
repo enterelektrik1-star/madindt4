@@ -2342,7 +2342,7 @@ const API2 = () => API + 'absensi-' + type;
                     $('aHeading').textContent = type === 'madin' ? 'Absen Madin' : 'Absen Ibris';
                     $('aNotice').textContent = type === 'madin' ? 'Pilih Hadir, Izin, Sakit, atau Alpha untuk mencatat absensi Madin.' : 'Pilih Izin, Sakit, atau Alpha. Status Hadir tidak dapat diubah.';
                     try {
-                        const d = await req2(`${API2}&action=students&type=${encodeURIComponent(type)}`);
+                        const d = await req2(`${API2()}&action=students`);
                         students = d.data || [];
                         $('aClass').textContent = students[0]?.nama_kelas || '-';
                         $('aToday').textContent = d.tanggal || '-';
@@ -2356,7 +2356,7 @@ const API2 = () => API + 'absensi-' + type;
                     if (!b || b.disabled) return;
                     b.disabled = true;
                     try {
-                        const d = await req2(api2(), {
+                        const d = await req2(API2(), {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
