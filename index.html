@@ -2345,20 +2345,10 @@ const API2 = () => API + 'absensi-' + type;
                     $('aHeading').textContent = type === 'madin' ? 'Absen Madin' : 'Absen Ibris';
                     $('aNotice').textContent = type === 'madin' ? 'Pilih Hadir, Izin, Sakit, atau Alpha untuk mencatat absensi Madin.' : 'Pilih Izin, Sakit, atau Alpha. Status Hadir tidak dapat diubah.';
                     try {
-                    const masuk = '';
-
-                    if (masuk === state.token) {
-                        const role = state.user.role;
-                        let kelase ="semua Kelas"
-                        
-                        if(role === 'kkelas') {
-                            kelase = state.user.kelas;
-                        }
-                    }
                         const d = await req2(`${API2()}&action=students`);
                         students = d.data || [];
-                        // $('aClass').textContent = students[0]?.nama_kelas || '-';
-                        $('aClass').textContent = kelase || '-';
+                        $('aClass').textContent = students[0]?.nama_kelas || '-';
+                        // $('aClass').textContent = kelase || '-';
                         $('aToday').textContent = d.tanggal || '-';
                         drawRows();
                     } catch (e) {
