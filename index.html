@@ -2276,8 +2276,7 @@ let type = 'madin',
     scanning = false,
     reportCurrent = null;
 
-const API2 = API + 'absensi-' + type;
-
+const api2 = () => API + 'absensi-' + type;
                 const toast2 = m => {
                     const el = $('aToast');
                     el.textContent = m;
@@ -2357,7 +2356,7 @@ const API2 = API + 'absensi-' + type;
                     if (!b || b.disabled) return;
                     b.disabled = true;
                     try {
-                        const d = await req2(API2, {
+                        const d = await req2(api2(), {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -2390,7 +2389,7 @@ const API2 = API + 'absensi-' + type;
                 $('aReportMonth').value = date.slice(0, 7);
                 async function loadClasses2() {
                     try {
-                        const d = await req2(`${API2}&action=classes&type=${encodeURIComponent(type)}`);
+                        const d = await req2(`${api2()}&action=classes`);
                         $('aReportClass').innerHTML = '<option value="">Semua kelas</option>' + (d.data || []).map(c => `<option value="${c.id}">${esc2(c.nama_kelas)}</option>`).join('');
                     } catch (e) {
                         toast2(e.message);
