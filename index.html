@@ -2340,7 +2340,9 @@ const API2 = () => API + 'absensi-' + type;
                     }).join('');
                 }
                 async function load2() {
-                    if (loggedIn) {
+                    const masuk = '';
+
+                    if (masuk === state.token) {
                         const role = state.user.role;
 
                         if(role === 'admin') {
