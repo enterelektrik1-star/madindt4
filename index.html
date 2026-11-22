@@ -2340,13 +2340,24 @@ const API2 = () => API + 'absensi-' + type;
                     }).join('');
                 }
                 async function load2() {
+                    if (loggedIn) {
+                        const role = state.user.role;
+
+                        if(role === 'admin') {
+                         kelase = "semua kelas";
+                        }
+                        if(role === 'kkelas') {
+                            kelase = state.user.kelas;
+                        }
+                    }
                     $('aRows').innerHTML = '<tr><td colspan="6" class="a-empty">Memuat data...</td></tr>';
                     $('aHeading').textContent = type === 'madin' ? 'Absen Madin' : 'Absen Ibris';
                     $('aNotice').textContent = type === 'madin' ? 'Pilih Hadir, Izin, Sakit, atau Alpha untuk mencatat absensi Madin.' : 'Pilih Izin, Sakit, atau Alpha. Status Hadir tidak dapat diubah.';
                     try {
                         const d = await req2(`${API2()}&action=students`);
                         students = d.data || [];
-                        $('aClass').textContent = students[0]?.nama_kelas || '-';
+                        // $('aClass').textContent = students[0]?.nama_kelas || '-';
+                        $('aClass').textContent = kelase || '-';
                         $('aToday').textContent = d.tanggal || '-';
                         drawRows();
                     } catch (e) {
