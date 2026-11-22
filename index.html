@@ -2344,10 +2344,8 @@ const API2 = () => API + 'absensi-' + type;
 
                     if (masuk === state.token) {
                         const role = state.user.role;
-
-                        if(role === 'admin') {
-                         kelase = "semua kelas";
-                        }
+                        let kelase ="semua Kelas"
+                        
                         if(role === 'kkelas') {
                             kelase = state.user.kelas;
                         }
