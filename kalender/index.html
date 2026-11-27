@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#123b32">
+<title>Kalender Jawa Online</title>
+<style>
+:root{--green:#123b32;--green2:#1d5b49;--gold:#d8ad57;--bg:#f4f6f2;--ink:#1d2a25;--muted:#718078;--line:#e4e9e3;--red:#c84c4c;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(125deg,#0e3029,#1d5b49);color:white;padding:30px 18px 54px}
+.wrap{max-width:1100px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:13px}.logo{width:48px;height:48px;border-radius:15px;background:#ffffff1c;display:grid;place-items:center;font-size:25px;border:1px solid #ffffff30}.brand h1{font-size:clamp(21px,4vw,29px);margin:0}.brand p{margin:4px 0 0;color:#d5e4dc;font-size:13px}.today{font-size:13px;color:#d5e4dc;text-align:right}
+main{max-width:1100px;margin:-30px auto 40px;padding:0 16px}.panel{background:white;border-radius:20px;box-shadow:0 12px 35px #17382b12;border:1px solid #e9eee9;padding:20px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.month-title{font-size:22px;font-weight:750}.controls{display:flex;gap:8px;align-items:center}.btn,select{border:1px solid var(--line);background:white;border-radius:10px;padding:10px 13px;color:var(--ink);font:inherit;cursor:pointer}.btn:hover{background:#f1f5f0}.btn.primary{background:var(--green);color:white;border-color:var(--green)}.btn.primary:hover{background:var(--green2)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin:18px 0;color:var(--muted);font-size:12px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}.dow{text-align:center;padding:8px 2px;color:var(--muted);font-size:12px;font-weight:700}.day{min-height:104px;border:1px solid var(--line);border-radius:12px;padding:9px 8px;background:white;text-align:left;cursor:pointer;position:relative;transition:.15s;overflow:hidden}.day:hover{border-color:#9ab8a7;transform:translateY(-1px)}.day.empty{background:#fafbf9;border-style:dashed;cursor:default}.day.today{outline:2px solid var(--gold);outline-offset:-2px}.day.selected{background:#edf5ef;border-color:var(--green2)}.num{font-weight:750;font-size:16px}.pasaran{font-size:11px;color:var(--green2);margin-top:6px;font-weight:650}.weton{font-size:10px;color:var(--muted);margin-top:3px}.badge{display:inline-block;font-size:9px;padding:3px 5px;border-radius:5px;margin-top:6px;background:#fdeeee;color:#a33;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.badge.cuti{background:#fff4dc;color:#8a641b}.sunday .num,.holiday .num{color:var(--red)}
+.below{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:15px}.detail h3,.holiday-list h3{margin:0 0 12px;font-size:16px}.detail-date{font-size:23px;font-weight:800;color:var(--green);margin-bottom:5px}.sub{font-size:13px;color:var(--muted);line-height:1.6}.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}.info{background:#f5f8f4;border-radius:11px;padding:11px}.info small{display:block;color:var(--muted);font-size:11px}.info strong{display:block;margin-top:4px;font-size:14px}.holiday-list{max-height:270px;overflow:auto}.holiday-item{padding:9px 0;border-bottom:1px solid var(--line);font-size:12px;line-height:1.5}.holiday-item strong{display:block;color:var(--ink)}.holiday-item span{color:var(--muted)}.note{font-size:11px;color:var(--muted);line-height:1.6;margin-top:15px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:0 15px 28px}
+@media(max-width:700px){header{padding:22px 16px 48px}.today{display:none}.panel{padding:14px;border-radius:16px}.calendar{gap:4px}.day{min-height:79px;padding:7px 5px;border-radius:9px}.num{font-size:14px}.pasaran{font-size:10px;margin-top:5px}.weton{font-size:9px}.badge{font-size:8px;padding:2px 3px}.below{grid-template-columns:1fr}.month-title{font-size:19px}.dow{font-size:11px}}
+@media(max-width:390px){.day{min-height:70px;padding:5px 3px}.pasaran{font-size:9px}.weton{font-size:8px}.controls{gap:4px}.btn,select{padding:8px 9px;font-size:12px}}
+</style>
+</head>
+<body>
+<header><div class="wrap top">
+ <div class="brand"><div class="logo">☀</div><div><h1>Kalender Jawa Online</h1><p>Kalender Masehi • Pasaran • Weton • Hari Libur Indonesia</p></div></div>
+ <div class="today" id="todayText"></div>
+</div></header>
+<main>
+ <section class="panel">
+  <div class="toolbar">
+   <div class="month-title" id="monthTitle"></div>
+   <div class="controls">
+    <button class="btn" id="prev" aria-label="Bulan sebelumnya">‹</button>
+    <button class="btn" id="today">Hari Ini</button>
+    <button class="btn" id="next" aria-label="Bulan berikutnya">›</button>
+    <select id="yearSelect" aria-label="Pilih tahun"></select>
+   </div>
+  </div>
+  <div class="legend">
+   <span><i class="dot" style="background:#c84c4c"></i>Libur nasional</span>
+   <span><i class="dot" style="background:#d8ad57"></i>Cuti bersama</span>
+   <span><i class="dot" style="background:#1d5b49"></i>Hari ini / dipilih</span>
+  </div>
+  <div class="calendar" id="calendar"></div>
+ </section>
+ <section class="below">
+  <div class="panel detail" id="detail"></div>
+  <div class="panel holiday-list"><h3>Hari libur & cuti bersama 2026</h3><div id="holidayList"></div></div>
+ </section>
+ <p class="note">Catatan: perhitungan pasaran dan weton memakai siklus 5 hari dan acuan Jumat Legi, 8 Juli 1633. Neptu dihitung dari nilai hari dan pasaran. Daftar libur yang disertakan adalah SKB 3 Menteri tahun 2026. Kalender ini belum menghitung tanggal/bulan/tahun Jawa (Sura, Sapar, dan seterusnya); jangan gunakan tampilan pasaran ini sebagai pengganti konversi kalender Jawa lengkap untuk keperluan adat resmi.</p>
+</main>
+<footer>Kalender Jawa Online • Berjalan langsung di browser • Tidak memerlukan database</footer>
+<script>
+const MONTHS=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const DAYS=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const PASARAN=['Legi','Pahing','Pon','Wage','Kliwon'];
+const NEPTU_HARI=[5,4,3,7,8,6,9]; // Minggu-Sabtu
+const NEPTU_PASARAN=[5,9,7,4,8];
+const holidays={
+ '2026-01-01':['Tahun Baru 2026 Masehi','nasional'],
+ '2026-01-16':['Isra Mikraj Nabi Muhammad SAW','nasional'],
+ '2026-02-16':['Cuti Bersama Tahun Baru Imlek 2577 Kongzili','cuti'],
+ '2026-02-17':['Tahun Baru Imlek 2577 Kongzili','nasional'],
+ '2026-03-18':['Cuti Bersama Hari Suci Nyepi','cuti'],
+ '2026-03-19':['Hari Suci Nyepi (Tahun Baru Saka 1948)','nasional'],
+ '2026-03-20':['Cuti Bersama Idul Fitri 1447 H','cuti'],
+ '2026-03-21':['Idul Fitri 1447 Hijriah','nasional'],
+ '2026-03-22':['Idul Fitri 1447 Hijriah','nasional'],
+ '2026-03-23':['Cuti Bersama Idul Fitri 1447 H','cuti'],
+ '2026-03-24':['Cuti Bersama Idul Fitri 1447 H','cuti'],
+ '2026-04-03':['Wafat Yesus Kristus','nasional'],
+ '2026-04-05':['Kebangkitan Yesus Kristus (Paskah)','nasional'],
+ '2026-05-01':['Hari Buruh Internasional','nasional'],
+ '2026-05-14':['Kenaikan Yesus Kristus','nasional'],
+ '2026-05-15':['Cuti Bersama Kenaikan Yesus Kristus','cuti'],
+ '2026-05-27':['Idul Adha 1447 Hijriah','nasional'],
+ '2026-05-28':['Cuti Bersama Idul Adha 1447 H','cuti'],
+ '2026-05-31':['Hari Raya Waisak 2570 BE','nasional'],
+ '2026-06-01':['Hari Lahir Pancasila','nasional'],
+ '2026-06-16':['1 Muharam Tahun Baru Islam 1448 H','nasional'],
+ '2026-08-17':['Proklamasi Kemerdekaan RI','nasional'],
+ '2026-08-25':['Maulid Nabi Muhammad SAW','nasional'],
+ '2026-12-24':['Cuti Bersama Hari Natal','cuti'],
+ '2026-12-25':['Kelahiran Yesus Kristus / Hari Natal','nasional']
+};
+const pad=n=>String(n).padStart(2,'0');
+const key=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const localDate=(y,m,d)=>new Date(y,m,d,12,0,0);
+function weton(date){
+ // 8 Juli 1633 adalah Jumat Legi; hitung selisih hari kalender tanpa masalah DST.
+ const anchor=Date.UTC(1633,6,8), target=Date.UTC(date.getFullYear(),date.getMonth(),date.getDate());
+ const diff=Math.round((target-anchor)/86400000);
+ const p=((diff%5)+5)%5;
+ const day=date.getDay();
+ return {pasaran:PASARAN[p],neptu:NEPTU_HARI[day]+NEPTU_PASARAN[p],weton:`${DAYS[day]} ${PASARAN[p]}`};
+}
+let view=new Date();view.setDate(1);let selected=new Date();selected.setHours(12,0,0,0);
+const $=id=>document.getElementById(id);
+function render(){
+ $('monthTitle').textContent=`${MONTHS[view.getMonth()]} ${view.getFullYear()}`;
+ $('todayText').textContent='Hari ini · '+new Intl.DateTimeFormat('id-ID',{dateStyle:'full'}).format(new Date());
+ const select=$('yearSelect');if(!select.options.length){for(let y=1900;y<=2100;y++){let o=document.createElement('option');o.value=y;o.textContent=y;select.append(o)}}select.value=view.getFullYear();
+ const grid=$('calendar');grid.innerHTML='';
+ DAYS.forEach(d=>{let el=document.createElement('div');el.className='dow';el.textContent=d;grid.append(el)});
+ const first=localDate(view.getFullYear(),view.getMonth(),1).getDay();
+ const count=new Date(view.getFullYear(),view.getMonth()+1,0).getDate();
+ for(let i=0;i<first;i++){let e=document.createElement('div');e.className='day empty';grid.append(e)}
+ for(let n=1;n<=count;n++){
+  const date=localDate(view.getFullYear(),view.getMonth(),n), k=key(date), info=weton(date), h=holidays[k];
+  let b=document.createElement('button');b.type='button';b.className='day'+(date.getDay()===0?' sunday':'')+(h?.[1]==='nasional'?' holiday':'')+(key(date)===key(new Date())?' today':'')+(key(date)===key(selected)?' selected':'');
+  let html=`<div class="num">${n}</div><div class="pasaran">${info.pasaran}</div><div class="weton">${info.weton}</div>`;
+  if(h)html+=`<div class="badge ${h[1]==='cuti'?'cuti':''}" title="${h[0]}">${h[1]==='cuti'?'Cuti bersama':'Libur'}</div>`;
+  b.innerHTML=html;b.title=`${info.weton} • Neptu ${info.neptu}${h?' • '+h[0]:''}`;b.addEventListener('click',()=>{selected=date;render()});grid.append(b);
+ }
+ renderDetail();renderHolidayList();
+}
+function renderDetail(){
+ const w=weton(selected),h=holidays[key(selected)];
+ $('detail').innerHTML=`<h3>Detail tanggal terpilih</h3><div class="detail-date">${selected.getDate()} ${MONTHS[selected.getMonth()]} ${selected.getFullYear()}</div><div class="sub">${DAYS[selected.getDay()]} · ${w.weton}${h?`<br><strong style="color:${h[1]==='cuti'?'#8a641b':'#b33'}">${h[1]==='cuti'?'Cuti bersama':'Libur nasional'}: ${h[0]}</strong>`:''}</div><div class="info-grid"><div class="info"><small>Hari</small><strong>${DAYS[selected.getDay()]}</strong></div><div class="info"><small>Pasaran</small><strong>${w.pasaran}</strong></div><div class="info"><small>Neptu</small><strong>${w.neptu}</strong></div></div><p class="sub" style="margin-top:13px">Weton: <strong>${w.weton}</strong>. Neptu merupakan jumlah nilai hari (${NEPTU_HARI[selected.getDay()]}) dan pasaran (${NEPTU_PASARAN[PASARAN.indexOf(w.pasaran)]}).</p>`;
+}
+function renderHolidayList(){
+ const box=$('holidayList');box.innerHTML='';
+ Object.entries(holidays).sort(([a],[b])=>a.localeCompare(b)).forEach(([k,v])=>{
+  const [y,m,d]=k.split('-').map(Number),date=localDate(y,m-1,d);
+  const item=document.createElement('div');item.className='holiday-item';
+  item.innerHTML=`<strong>${d} ${MONTHS[m-1]} 2026 — ${v[0]}</strong><span>${DAYS[date.getDay()]} · ${v[1]==='cuti'?'Cuti bersama':'Libur nasional'}</span>`;
+  box.append(item);
+ });
+}
+$('prev').onclick=()=>{view.setMonth(view.getMonth()-1);render()};
+$('next').onclick=()=>{view.setMonth(view.getMonth()+1);render()};
+$('today').onclick=()=>{selected=new Date();selected.setHours(12,0,0,0);view=new Date(selected.getFullYear(),selected.getMonth(),1);render()};
+$('yearSelect').onchange=e=>{view.setFullYear(Number(e.target.value));render()};
+render();
+</script>
+</body>
+</html>
